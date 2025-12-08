@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title data-key="appTitle">Personal Budget Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- HEADER -->
+    <header class="app-header">
+
+      <!-- MONTH SELECTOR -->
+      <div class="month-selector">
+        <button id="month-btn" data-key="monthButton">December Budget</button>
+        <ul id="month-list" class="hidden">
+          <li data-month="January" data-key="jan">January</li>
+          <li data-month="February" data-key="feb">February</li>
+          <li data-month="March" data-key="mar">March</li>
+          <li data-month="April" data-key="apr">April</li>
+          <li data-month="May" data-key="may">May</li>
+          <li data-month="June" data-key="jun">June</li>
+          <li data-month="July" data-key="jul">July</li>
+          <li data-month="August" data-key="aug">August</li>
+          <li data-month="September" data-key="sep">September</li>
+          <li data-month="October" data-key="oct">October</li>
+          <li data-month="November" data-key="nov">November</li>
+          <li data-month="December" data-key="dec">December</li>
+        </ul>
+      </div>
+
+      <!-- LANGUAGE SELECTOR -->
+      <div class="lang-selector">
+        <label for="lang-select" data-key="languageLabel">Language:</label>
+        <select id="lang-select">
+          <option value="en">English</option>
+          <option value="uz">O‘zbekcha</option>
+        </select>
+      </div>
+      <div class="currency-selector">
+  <label data-key="currencyLabel">Currency:</label>
+  <select id="currency-select">
+      <option value="KRW">₩ KRW</option>
+      <option value="USD">$ USD</option>
+      <option value="EUR">€ EUR</option>
+      <option value="JPY">¥ JPY</option>
+      <option value="GBP">£ GBP</option>
+      <option value="UZS">UZS</option>
+  </select>
+</div>
+
+
+      <p data-key="headerQuote">Control your money like an adult, not like a hungry student.</p>
+    </header>
+
+    <!-- SUMMARY -->
+    <section class="summary">
+      <div class="card income">
+        <h2 data-key="totalIncome">Total Income</h2>
+        <p class="amount" id="total-income">₩0</p>
+      </div>
+
+      <div class="card expenses">
+        <h2 data-key="totalExpenses">Total Expenses</h2>
+        <p class="amount" id="total-expenses">₩0</p>
+      </div>
+
+      <div class="card balance">
+        <h2 data-key="balanceLeft">Left</h2>
+        <p class="amount" id="total-balance">₩0</p>
+      </div>
+    </section>
+
+    <!-- FORMS -->
+    <section class="forms">
+
+      <!-- ADD INCOME -->
+      <div class="card form-card">
+        <h3 data-key="addIncome">Add Income</h3>
+
+        <form id="income-form">
+          <div class="field">
+            <label data-key="incomeSource">Source</label>
+            <input type="text" id="income-source" required>
+          </div>
+
+          <div class="field">
+            <label data-key="amountLabel">Amount (₩)</label>
+            <input type="number" id="income-amount" min="0" required>
+          </div>
+
+          <button type="submit" data-key="addIncomeBtn">+ Add Income</button>
+        </form>
+
+        <ul class="list" id="income-list"></ul>
+      </div>
+
+      <!-- ADD EXPENSE -->
+      <div class="card form-card">
+        <h3 data-key="addExpense">Add Expense</h3>
+
+        <form id="expense-form">
+          <div class="field">
+            <label data-key="descLabel">Description</label>
+            <input type="text" id="expense-desc" required>
+          </div>
+
+          <div class="field">
+            <label data-key="categoryLabel">Category</label>
+            <select id="expense-category">
+              <option value="Food" data-key="catFood">Food</option>
+              <option value="Transport" data-key="catTransport">Transport</option>
+              <option value="Utilities" data-key="catUtilities">Utilities</option>
+              <option value="Rent" data-key="catRent">Rent</option>
+              <option value="Debt" data-key="catDebt">Debt</option>
+              <option value="Fun" data-key="catFun">Fun</option>
+              <option value="Other" data-key="catOther">Other</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label data-key="amountLabel">Amount (₩)</label>
+            <input type="number" id="expense-amount" min="0" required>
+          </div>
+
+          <button type="submit" data-key="addExpenseBtn">+ Add Expense</button>
+        </form>
+      </div>
+
+    </section>
+
+    <!-- EXPENSE TABLE -->
+    <section class="table-section card">
+      <div class="table-header">
+        <h3 data-key="expenseDetails">Expenses Details</h3>
+        <span id="expense-count">0 items</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th data-key="tableDate">Date</th>
+            <th data-key="tableDesc">Description</th>
+            <th data-key="tableCategory">Category</th>
+            <th class="right" data-key="tableAmount">Amount (₩)</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody id="expense-table-body"></tbody>
+      </table>
+    </section>
+
+    <!-- AI ANALYSIS -->
+    <section class="card" style="margin-top: 20px;">
+        
+        <h2 data-key="aiTitle">AI Budget Analysis</h2>
+
+        <button id="ai-analyze-btn" class="ai-img-btn" aria-label="AI byudjet tahlili">
+        <img src="assets/ai-robot.png" alt="AI Robot" />
+        </button>
+
+
+
+
+      <div id="analysis-output"
+          style="margin-top: 12px; white-space: pre-line; color: var(--text-sub); font-size: 0.9rem;">
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <p data-key="footerText">Built for Botirov’s budget. No more “qayerga ketdi pul?”</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
