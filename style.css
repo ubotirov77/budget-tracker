@@ -30,11 +30,19 @@ body {
   display: flex;
   justify-content: center;
   padding: 24px;
+  transition: background 0.6s ease, color 0.6s ease;
+  
 }
 
 .app {
   width: 100%;
   max-width: 1080px;
+  transition: background 0.6s ease, box-shadow 0.6s ease, border-color 0.6s ease;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-lg);
+  padding: 24px;
 }
 
 /* HEADER */
@@ -43,6 +51,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px 24px;
+  background: linear-gradient(to right, rgba(31, 41, 55,
+  0.85), rgba(15, 23, 42, 0.85));
+  border-radius: var(--radius-lg);
+  
 }
 
 /* LANGUAGE SELECTOR */
@@ -63,7 +76,8 @@ body {
   color: var(--text-sub);
 }
 
-#lang-select, #currency-select {
+#lang-select,
+#currency-select {
   background: var(--bg-soft);
   border-radius: 999px;
   border: 1px solid rgba(55, 65, 81, 0.9);
@@ -73,7 +87,8 @@ body {
   cursor: pointer;
 }
 
-#lang-select:focus, #currency-select:focus {
+#lang-select:focus,
+#currency-select:focus {
   outline: none;
   border-color: var(--accent-balance);
 }
@@ -147,6 +162,7 @@ body {
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(24px);
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
 }
 
 .summary .card h2 {
@@ -162,9 +178,15 @@ body {
   font-weight: 600;
 }
 
-.income { border-left: 4px solid var(--accent-income); }
-.expenses { border-left: 4px solid var(--accent-expenses); }
-.balance { border-left: 4px solid var(--accent-balance); }
+.income {
+  border-left: 4px solid var(--accent-income);
+}
+.expenses {
+  border-left: 4px solid var(--accent-expenses);
+}
+.balance {
+  border-left: 4px solid var(--accent-balance);
+}
 
 /* FORMS */
 .forms {
@@ -216,7 +238,7 @@ button {
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 500;
-  background: linear-gradient(135deg, #3b82f6, #22c55e);
+  background: linear-gradient(135deg, #0b1120, #0b1120);
   color: white;
   transition: 0.1s;
 }
@@ -252,6 +274,14 @@ button:active {
   margin-bottom: 18px;
 }
 
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: var(--text-sub);
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -262,13 +292,19 @@ thead {
   background: rgba(15, 23, 42, 0.9);
 }
 
-th, td {
+th,
+td {
   padding: 10px 8px;
   border-bottom: 1px solid rgba(31, 41, 55, 0.85);
 }
 
 tbody tr:hover {
   background: rgba(255, 255, 255, 0.03);
+}
+
+th.right,
+td.right {
+  text-align: right;
 }
 
 /* AI ANALYSIS ROBOT */
@@ -286,6 +322,7 @@ tbody tr:hover {
 
   animation: robotFloat 3s ease-in-out infinite;
   transition: 0.2s;
+  border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 .ai-img-btn img {
@@ -300,9 +337,15 @@ tbody tr:hover {
 
 /* ROBOT FLOAT ANIMATION */
 @keyframes robotFloat {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 /* FOOTER */
@@ -349,7 +392,8 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 
-  table th, table td {
+  table th,
+  table td {
     padding: 8px 6px;
     font-size: 0.75rem;
   }
@@ -379,4 +423,138 @@ tbody tr:hover {
   .summary .amount {
     font-size: 1.3rem;
   }
+}
+
+/* -------------------------------
+   SEASONAL THEMES
+--------------------------------*/
+
+/* HEADER va FOOTER transition allaqachon tepada bor */
+.app-header,
+.app-footer {
+  transition: background 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* WINTER – QORLI, SOVUQ, KO'K TONA */
+body.theme-winter {
+  background: radial-gradient(circle at top, #e4f4ff 0, #0b1324 55%, #050816 100%);
+  color: #eaf6ff;
+}
+
+body.theme-winter .app {
+  background: rgba(7, 12, 30, 0.96);
+  box-shadow: 0 0 40px rgba(132, 209, 255, 0.35);
+}
+
+body.theme-winter .card {
+  background: rgba(9, 20, 45, 0.92);
+  border: 1px solid rgba(150, 220, 255, 0.35);
+  box-shadow: 0 0 20px rgba(80, 160, 220, 0.25);
+}
+
+body.theme-winter .summary .card.balance {
+  border-color: rgba(180, 240, 255, 0.8);
+}
+
+body.theme-winter .app-header {
+  background: linear-gradient(to right, rgba(12, 34, 70, 0.9), rgba(6, 18, 40, 0.9));
+  box-shadow: 0 10px 25px rgba(40, 130, 200, 0.4);
+}
+
+body.theme-winter .app-footer {
+  background: rgba(4, 10, 24, 0.9);
+  color: #cbe6ff;
+}
+
+/* SPRING – YENGIL YASHIL, GULLI VIBE */
+body.theme-spring {
+  background: radial-gradient(circle at top left, #f2ffe9 0, #e8fff7 30%, #071520 80%);
+  color: #f9fff8;
+}
+
+body.theme-spring .app {
+  background: rgba(12, 26, 28, 0.96);
+  box-shadow: 0 0 35px rgba(150, 240, 180, 0.35);
+}
+
+body.theme-spring .card {
+  background: rgba(15, 40, 34, 0.92);
+  border: 1px solid rgba(160, 240, 190, 0.45);
+  box-shadow: 0 0 18px rgba(100, 200, 150, 0.3);
+}
+
+body.theme-spring .summary .card.income {
+  border-color: rgba(180, 255, 200, 0.8);
+}
+
+body.theme-spring .app-header {
+  background: linear-gradient(to right, rgba(14, 60, 40, 0.95), rgba(8, 34, 32, 0.95));
+  box-shadow: 0 10px 25px rgba(120, 220, 160, 0.45);
+}
+
+body.theme-spring .app-footer {
+  background: rgba(6, 22, 20, 0.95);
+  color: #defbe6;
+}
+
+/* SUMMER – QUYOSH, ISSIQ, GOLDISH */
+body.theme-summer {
+  background: radial-gradient(circle at top, #fff3cc 0, #ffd98c 28%, #081522 85%);
+  color: #fff7e5;
+}
+
+body.theme-summer .app {
+  background: rgba(14, 20, 32, 0.96);
+  box-shadow: 0 0 38px rgba(255, 210, 120, 0.4);
+}
+
+body.theme-summer .card {
+  background: rgba(26, 24, 40, 0.95);
+  border: 1px solid rgba(255, 210, 135, 0.55);
+  box-shadow: 0 0 20px rgba(255, 200, 120, 0.35);
+}
+
+body.theme-summer .summary .card.expenses {
+  border-color: rgba(255, 180, 100, 0.85);
+}
+
+body.theme-summer .app-header {
+  background: linear-gradient(to right, rgba(70, 40, 10, 0.95), rgba(18, 18, 40, 0.96));
+  box-shadow: 0 10px 25px rgba(255, 180, 90, 0.5);
+}
+
+body.theme-summer .app-footer {
+  background: rgba(12, 12, 26, 0.96);
+  color: #ffe9c2;
+}
+
+/* AUTUMN – JIGARRANG, NARNIY, BARG */
+body.theme-autumn {
+  background: radial-gradient(circle at top, #3b1a10 0, #1d0c0a 40%, #05010a 100%);
+  color: #ffe9d6;
+}
+
+body.theme-autumn .app {
+  background: rgba(18, 10, 10, 0.97);
+  box-shadow: 0 0 40px rgba(255, 140, 60, 0.5);
+}
+
+body.theme-autumn .card {
+  background: rgba(36, 18, 12, 0.96);
+  border: 1px solid rgba(255, 150, 90, 0.6);
+  box-shadow: 0 0 20px rgba(255, 120, 60, 0.4);
+}
+
+body.theme-autumn .summary .card.expenses {
+  border-color: rgba(255, 160, 110, 0.9);
+}
+
+body.theme-autumn .app-header {
+  background: linear-gradient(to right, rgba(60, 24, 10, 0.96), rgba(34, 12, 10, 0.97));
+  box-shadow: 0 10px 28px rgba(255, 140, 60, 0.55);
+}
+
+body.theme-autumn .app-footer {
+  background: rgba(20, 8, 8, 0.96);
+  color: #ffddc0;
 }
