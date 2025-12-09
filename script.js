@@ -1,8 +1,43 @@
 // -------------------------------
+// MONTH SELECTOR
+// -------------------------------
+const monthBtn = document.getElementById("month-btn");
+const monthList = document.getElementById("month-list");
+
+if (monthBtn && monthList) {
+  monthBtn.addEventListener("click", () => {
+    monthList.classList.toggle("hidden");
+  });
+
+  document.querySelectorAll("#month-list li").forEach(li => {
+    li.addEventListener("click", () => {
+      monthBtn.textContent = `${li.textContent} Budget`;
+      monthList.classList.add("hidden");
+    });
+  });
+
+  document.addEventListener("click", e => {
+    if (!monthBtn.contains(e.target) && !monthList.contains(e.target)) {
+      monthList.classList.add("hidden");
+    }
+  });
+}
+
+// -------------------------------
 // LOAD DATA FIRST (LOCALSTORAGE)
 // -------------------------------
-let incomeData = JSON.parse(localStorage.getItem("incomeData")) || [];
-let expenseData = JSON.parse(localStorage.getItem("expenseData")) || [];
+let incomeData = [];
+let expenseData = [];
+
+try {
+  const inc = JSON.parse(localStorage.getItem("incomeData"));
+  const exp = JSON.parse(localStorage.getItem("expenseData"));
+  if (Array.isArray(inc)) incomeData = inc;
+  if (Array.isArray(exp)) expenseData = exp;
+} catch (err) {
+  incomeData = [];
+  expenseData = [];
+}
 
 function saveData() {
   localStorage.setItem("incomeData", JSON.stringify(incomeData));
@@ -34,7 +69,8 @@ const els = {
 // -------------------------------
 // CURRENCY SYSTEM
 // -------------------------------
-let currentCurrency = "KRW";
+let currentCurrency =
+  localStorage.getItem("budgetCurrency") || "KRW";
 
 function formatCurrency(num) {
   const safe = Number.isFinite(num) ? num : 0;
@@ -49,33 +85,37 @@ function formatCurrency(num) {
   }
 }
 
-// Auto-detect region -> default currency
+// Auto-detect region -> default currency (1st time only)
 try {
-  const userLocale = Intl.DateTimeFormat().resolvedOptions().locale;
-  const region = userLocale.split("-")[1];
+  if (!localStorage.getItem("budgetCurrency")) {
+    const userLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+    const region = userLocale.split("-")[1];
 
-  const autoMap = {
-    KR: "KRW",
-    US: "USD",
-    GB: "GBP",
-    JP: "JPY",
-    DE: "EUR",
-    FR: "EUR",
-    UZ: "UZS"
-  };
+    const autoMap = {
+      KR: "KRW",
+      US: "USD",
+      GB: "GBP",
+      JP: "JPY",
+      DE: "EUR",
+      FR: "EUR",
+      UZ: "UZS"
+    };
 
-  if (autoMap[region]) {
-    currentCurrency = autoMap[region];
+    if (autoMap[region]) {
+      currentCurrency = autoMap[region];
+      localStorage.setItem("budgetCurrency", currentCurrency);
+    }
   }
 } catch {}
 
 // Currency select change
 if (els.currencySelect) {
-  // initial sync
+  // initial sync with currentCurrency
   els.currencySelect.value = currentCurrency;
 
   els.currencySelect.addEventListener("change", () => {
     currentCurrency = els.currencySelect.value;
+    localStorage.setItem("budgetCurrency", currentCurrency);
     renderSummary();
     renderIncomeList();
     renderExpenseTable();
@@ -86,8 +126,14 @@ if (els.currencySelect) {
 // SUMMARY
 // -------------------------------
 function renderSummary() {
-  const totalIncome = incomeData.reduce((s, i) => s + (Number(i.amount) || 0), 0);
-  const totalExpenses = expenseData.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+  const totalIncome = incomeData.reduce(
+    (s, i) => s + (Number(i.amount) || 0),
+    0
+  );
+  const totalExpenses = expenseData.reduce(
+    (s, e) => s + (Number(e.amount) || 0),
+    0
+  );
   const balance = totalIncome - totalExpenses;
 
   if (els.totalIncome) els.totalIncome.textContent = formatCurrency(totalIncome);
@@ -108,12 +154,12 @@ function renderIncomeList() {
 
     const li = document.createElement("li");
     li.innerHTML = `
-      <span>${item.source}</span>
+      <span class="source">${item.source}</span>
       <span>${formatCurrency(amount)}</span>
       <button class="delete-btn">✖</button>
     `;
 
-    li.querySelector("button").onclick = () => {
+    li.querySelector(".delete-btn").onclick = () => {
       incomeData.splice(index, 1);
       saveData();
       renderIncomeList();
@@ -144,7 +190,7 @@ function renderExpenseTable() {
       <td><button class="delete-btn">✖</button></td>
     `;
 
-    tr.querySelector("button").onclick = () => {
+    tr.querySelector(".delete-btn").onclick = () => {
       expenseData.splice(index, 1);
       saveData();
       renderExpenseTable();
@@ -279,8 +325,14 @@ G) Brutally honest hard truth paragraph
 // -------------------------------
 if (els.aiAnalyzeBtn) {
   els.aiAnalyzeBtn.addEventListener("click", () => {
-    const totalIncome = incomeData.reduce((s, i) => s + (Number(i.amount) || 0), 0);
-    const totalExpenses = expenseData.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const totalIncome = incomeData.reduce(
+      (s, i) => s + (Number(i.amount) || 0),
+      0
+    );
+    const totalExpenses = expenseData.reduce(
+      (s, e) => s + (Number(e.amount) || 0),
+      0
+    );
     const balance = totalIncome - totalExpenses;
 
     const incomeObjects = incomeData.map(i => ({
@@ -310,6 +362,42 @@ if (els.aiAnalyzeBtn) {
     window.open(`https://chatgpt.com/?q=${encoded}`, "_blank");
   });
 }
+
+// -------------------------------
+// MULTILINGUAL SYSTEM
+// -------------------------------
+const translations = {};
+let currentLangCode = "en";
+
+async function loadLanguage(lang) {
+  try {
+    const res = await fetch(`lang/${lang}.json`);
+    translations[lang] = await res.json();
+    currentLangCode = lang;
+    updateTexts();
+  } catch (err) {
+    console.error("Language load error:", err);
+  }
+}
+
+function updateTexts() {
+  const dict = translations[currentLangCode];
+  if (!dict) return;
+
+  document.querySelectorAll("[data-key]").forEach(el => {
+    const key = el.getAttribute("data-key");
+    if (dict[key]) el.textContent = dict[key];
+  });
+}
+
+if (els.langSelect) {
+  els.langSelect.addEventListener("change", () => {
+    loadLanguage(els.langSelect.value);
+  });
+}
+
+// load default language
+loadLanguage("en");
 
 // -------------------------------
 // INITIAL RENDER
